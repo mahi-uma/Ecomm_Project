@@ -1,7 +1,12 @@
 package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import dto.CategoryDto;
 import entity.CategoryEntity;
 import util.DbConnect;
 public class CategoryDao {
@@ -21,6 +26,18 @@ public class CategoryDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	public List<CategoryDto> diplayCategories() throws SQLException {
+		List<CategoryDto> categoryDto_objs=new ArrayList<>();
+		String sql="select * from category";
+		try(PreparedStatement stmt = con.prepareStatement(sql)){
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next()) {
+				System.out.println(rs.getInt(1)+" "+rs.getString(3));
+				categoryDto_objs.add(new CategoryDto(rs.getInt(1),rs.getString(3)));
+			}
+		}
+		return categoryDto_objs;
 	}
 }
 

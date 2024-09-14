@@ -12,7 +12,34 @@
 		    align-items: center;
 		    height: 100vh;
 		    margin: 0;
-		    background-color: #f4f4f4;
+		    background: linear-gradient(135deg, #1d2b64, #f8cdda);
+		    background-attachment: fixed;
+		    color: #333;
+		}
+		.welcome-bar {
+		    width: 100%;
+		    padding: 20px 10px;
+		   	background: linear-gradient(to right, #da4453, #89216b);
+		    color: white;
+		    text-align: center;
+		    font-size: 28px;
+		    font-weight: bold;
+		    letter-spacing: 1px;
+		    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+		    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+		    border-radius: 10px;
+		    position: absolute;
+		    top: 10px;
+		    left: 10px;
+		    right: 10px;
+		    transition: all 0.4s ease; 
+		}
+		.welcome-bar:hover {
+		    background: linear-gradient(90deg, #66bb6a, #43a047);
+		    color: #f8f8f8; 
+		    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3); 
+		    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+		    transform: scale(1.02);
 		}
 		.container {
 		    width: 500px;
@@ -75,6 +102,10 @@
     </style>
 </head>
 <body>
+	<div class="welcome-bar">
+        Welcome to RevShop - Your Trusted eCommerce Platform
+    </div>
+	
     <div class="container">
         <div class="tabs">
             <div class="tab active" id="buyer-tab">Buyer Login</div>

@@ -1,13 +1,30 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" import="java.util.List"%>
 <%@ page import="dto.BuyerDto"%>
+<%@ page import="dto.ProductDto"%>
+<%@ page import="dto.CategoryDto"%>
 <%
-    HttpSession sellerSession = request.getSession();
-    BuyerDto buyer = (BuyerDto) sellerSession.getAttribute("buyer");
+    HttpSession session1 = request.getSession();
+    BuyerDto buyer = (BuyerDto) session1.getAttribute("buyer");
+    List<ProductDto> products = (List<ProductDto>) session.getAttribute("products");
+    List<CategoryDto> categories = (List<CategoryDto>) session.getAttribute("categories");
+    List<Boolean> favorites = (List<Boolean>) session.getAttribute("favorites"); // List indicating favorite status
+    List<Boolean> cart = (List<Boolean>) session.getAttribute("cart");
     
     if (buyer == null) {
-        response.sendRedirect("login.jsp");
+        response.sendRedirect("/ecommProject/");
         return;
+    }
+%>
+<% 
+ String updateSuccess = (String) session1.getAttribute("updateSuccess");
+    if (updateSuccess != null) {
+%>
+    <script>
+        alert("<%= updateSuccess %>");
+    </script>
+<%
+        session1.removeAttribute("updateSuccess");
     }
 %>
 <!DOCTYPE html>
@@ -19,44 +36,9 @@
     
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .navbar {
-            background-color: #343a40; /* Dark background */
-            padding: 1rem; /* Padding for more space */
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Add shadow */
-        }
-        .navbar-brand {
-            color: #ffffff; /* White text for brand */
-        }
-        .navbar-nav .nav-link {
-            color: #ffffff; /* White text for links */
-        }
-        .navbar-nav .nav-link:hover {
-            color: #d3d3d3; /* Light grey hover color */
-        }
-        .navbar-toggler-icon {
-            background-color: #ffffff; /* White color for the toggle icon */
-        }
-
-        /* Dropdown menu customization */
-        .dropdown-menu {
-            background-color: #343a40; /* Dark dropdown */
-            border: none; /* Remove borders */
-        }
-        .dropdown-item {
-            color: #ffffff; /* White text */
-        }
-        .dropdown-item:hover {
-            background-color: #495057; /* Slightly lighter grey on hover */
-        }
-
-        /* Welcome message styling */
-        .alert {
-            border-radius: 10px; /* Rounded corners */
-        }
-    </style>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
-
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -74,6 +56,9 @@
                     <a class="nav-link" href="#">View Cart</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="/ecommProject/UpdateServlet?action=display">My WishList</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="#">Order History</a>
                 </li>
                 <li class="nav-item">
@@ -88,9 +73,9 @@
                         <img src="https://img.icons8.com/ios-filled/50/ffffff/user-male-circle.png" alt="Profile" width="30" height="30">
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
-                        <a class="dropdown-item" href="#">Profile</a>
+                        <a class="dropdown-item" href="/ecommProject/ServerController?userType=profile">Profile</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Logout</a>
+                        <a class="dropdown-item" href="/ecommProject/">Logout</a>
                     </div>
                 </li>
             </ul>
@@ -104,60 +89,105 @@
             <p>We're glad to have you here. Explore the products and enjoy shopping!</p>
         </div>
     </div>
-    <!-- Product Search and Filter Form -->
     <div class="container mt-4">
         <h2>Products</h2>
-        
-        <form action="dashboard" method="get" class="mb-4">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <input type="text" name="search" class="form-control" placeholder="Search products...">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <select name="category" class="form-control">
-                            <option value="">All Categories</option>
-                            <c:forEach var="category" items="${categories}">
-                                <option value="${category}">${category}</option>
-                            </c:forEach>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary btn-block">Search</button>
-                </div>
-            </div>
-        </form>
 
-        <!-- Products Display -->
-        <div class="row">
-            <c:forEach var="product" items="${products}">
-                <div class="col-md-4 mb-4">
-                    <div class="card d-flex flex-column" style="width: 18rem;">
-                        <img src="${product.imageUrl}" class="card-img-top" alt="${product.name}">
+        <div class="row ">
+            <%
+                for (int i = 0; i < products.size(); i++) {
+                    ProductDto product = products.get(i);
+                    boolean isFavorite = favorites.get(i);
+                    String favoriteAction = isFavorite ? "remove" : "add";
+                    String favoriteIcon = isFavorite ? "fas fa-star" : "far fa-star";
+                    String favoriteColor = isFavorite ? "btn-warning" : "btn-outline-warning";
+                    boolean isInCart = cart.get(i);
+                    String cartAction = isInCart ? "removecart" : "addcart";
+                    String cartIcon = isInCart ? "fas fa-shopping-cart" : "far fa-shopping-cart";
+                    String cartColor = isInCart ? "btn-danger" : "btn-outline-danger";
+                    String buttonText = isInCart ? "Remove from Cart" : "Add to Cart";
+            %>
+                <div class="col-md-4 mb-4 ">
+                    <div class="card d-flex flex-column" style="width: 350px;">
+                        <img src="<%= request.getContextPath() %>/images/download.jpg" alt="Login Picture" style="width:340px;height:200px"/>
                         <div class="card-body d-flex flex-column flex-grow-1">
-                            <h5 class="card-title">${product.name}</h5>
-                            <p class="card-text">${product.description}</p>
+                            <h5 class="card-title"><%= product.getPro_name() %></h5>
+                            <p class="card-text"><%= product.getPdesc() %></p>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Category: ${product.category}</li>
-                            <li class="list-group-item">Rating: ${product.rating}</li>
-                            <li class="list-group-item">Price: ${product.price}</li>
+                            <li class="list-group-item">Price: <%= product.getPpp() %></li>
+                            <li class="list-group-item">Rating: <%= product.getPpp() %></li>
                         </ul>
-                        <div class="card-body d-flex justify-content-between">
-                            <a href="#" class="card-link">Add to Cart</a>
-                            <a href="#" class="card-link">Buy Now</a>
+                        <div class="card-body">
+                            <div class="row">
+                            	<div class="col-6">
+                                    <a href="#" class="btn btn-info btn-block">See Review</a>
+                                </div>
+                                <div class="col-6">
+                                    <a href="#" class="btn btn-success btn-block">Buy Now</a>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-6">
+                                    <!-- Add to Cart / Remove from Cart Form -->
+                                    <form action="/ecommProject/CartServlet" method="post">
+                                        <input type="hidden" name="productId" value="<%= product.getP_id() %>">
+                                        <input type="hidden" name="action" value="<%= cartAction %>">
+                                        <button type="submit" class="btn <%= cartColor %> btn-block">
+                                            <i class="<%= cartIcon %>"></i> <span><%= buttonText %></span>
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="col-6">
+                                    <a href="FavServlet?productId=<%= product.getP_id() %>&action=<%= favoriteAction %>" class="btn <%= favoriteColor %> btn-block">
+                                        <i class="<%= favoriteIcon %>"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row mt-3 justify-content-center">
+                                <a href="#" class="btn btn-info btn-block" data-toggle="modal" data-target="#addReviewModal<%= i %>" style="width:150px">Add review</a>
+                            </div>
+                            <!-- Modal for each product -->
+                            <div class="modal fade" id="addReviewModal<%= i %>" tabindex="-1" role="dialog" aria-labelledby="addReviewModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="addReviewModalLabel">Add Your Review</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Review Form -->
+                                            <form id="reviewForm<%= i %>" action="/ecommProject/ReviewServlet" method="post">
+                                                <input type="hidden" name="productId" value="<%= product.getP_id() %>">
+                                                <div class="form-group">
+                                                    <label for="rating">Rating (0 to 5)</label>
+                                                    <input type="number" class="form-control" id="rating" name="rating" min="0" max="5" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="review">Review</label>
+                                                    <textarea class="form-control" id="review" name="review" rows="3" required></textarea>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-primary" form="reviewForm<%= i %>">OK</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </c:forEach>
+                        </div>
+            <%
+                }
+            %>
         </div>
     </div>
-
     <!-- Bootstrap JS and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 </body>
 </html>

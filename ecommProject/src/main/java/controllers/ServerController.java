@@ -8,10 +8,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 @WebServlet("/ServerController")
 public class ServerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
     public ServerController() {
         super();
     }
@@ -34,9 +34,22 @@ public class ServerController extends HttpServlet {
 		else if(s.equals("/ecommProject") && t.equals("buyer_register")) {
 			final_page="/views/BuyerRegister.jsp";
 		}
+		else if(s.equals("/ecommProject") && t.equals("serverDown")) {
+			final_page="/views/ServerDown.jsp";
+		}
+		else if(s.equals("/ecommProject") && t.equals("profile")) {
+			final_page="/views/Profile.jsp";
+		}
+		else if(s.equals("/ecommProject") && t.equals("update")) {
+			final_page="/views/UpdateProfile.jsp";
+		}
+		else if(s.equals("/ecommProject") && t.equals("displayWish")) {
+			final_page="/views/WishList.jsp";
+		}
 		RequestDispatcher dispatcher = request.getRequestDispatcher(final_page);
         dispatcher.forward(request, response);
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 	}
 }

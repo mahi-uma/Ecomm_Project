@@ -33,11 +33,6 @@ public class SellerController extends HttpServlet {
         String bus_name=request.getParameter("bus_name");
         String bus_type=request.getParameter("bus_type");
         String bus_address=request.getParameter("bus_address");
-        if (phno.length() != 10) {
-        	request.setAttribute("error", "Phone number must be 10 digits.");
-            request.getRequestDispatcher("/ServerController?userType=seller_register").forward(request, response);
-            return;
-        }
         SellerEntity sellerEntity_obj=new SellerEntity(name,email,password,phno,bus_name,bus_type,bus_address);
         try {
 			sellerService_obj.register(sellerEntity_obj);

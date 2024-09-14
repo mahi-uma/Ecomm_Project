@@ -65,7 +65,7 @@
         }
 
         /* Error message style */
-        .error {
+        .error,#er {
             color: red;
             font-size: 12px;
         }
@@ -74,7 +74,7 @@
 <body>
     <div class="registration-form">
         <h2>Seller Registration</h2>
-        <form action="/ecommProject/SellerController" method="post">
+        <form action="/ecommProject/SellerController" method="post" onsubmit="return fun_valid()">
             <div class="form-group">
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name" required>
@@ -86,14 +86,12 @@
             <div class="form-group">
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
+                <span id="er"></span>
             </div>
             <div class="form-group">
                 <label for="phno">Phone Number:</label>
                 <input type="text" id="phno" name="phno" required>
-                <span class="error">
-                    <% String error = (String) request.getAttribute("error"); %>
-                    <%= error != null ? error : "" %>
-                </span>
+                <span class="error"></span>
             </div>
             <div class="form-group">
                 <label for="bus_name">Business Name:</label>
@@ -120,5 +118,24 @@
 	<% 
 	    } 
 	%>
+	<script>
+		function fun_valid(){
+			var pwd=document.getElementById("phno").value;
+			var ph=document.getElementById("password").value;
+			var phRegex=/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+			if(!phRegex.test(ph)){
+				var sp1=document.getElementById("er");
+				sp1.textContent="Password needs to be Strong..";
+				return false;
+			}
+			var phoneRegex = /^\d{10}$/;
+			if (!phoneRegex.test(pwd)) {
+				var sp=document.getElementsByClassName("error")[0]
+				sp.textContent="Phone number must be exactly 10 digits."
+				return false;
+            }
+			return true;
+		}
+	</script>
 </body>
 </html>

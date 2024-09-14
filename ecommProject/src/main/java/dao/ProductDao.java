@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import entity.ProductEntity;
+import dto.ProductDto;
 import util.DbConnect;
 public class ProductDao {
 	private static Connection con;
@@ -44,4 +45,27 @@ public class ProductDao {
 		}
 		return dup;
 	}
+	public List<ProductDto> displayProducts() throws SQLException {
+		List<ProductDto> productDto_objs=new ArrayList<>();
+		String sql="select * from products ";
+		try(PreparedStatement stmt=con.prepareStatement(sql)){
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next()) {
+				productDto_objs.add(new ProductDto(rs.getInt(1), rs.getInt(2), rs.getString(3),  rs.getString(4),  rs.getString(5),  rs.getString(6),  rs.getInt(7), rs.getInt(8), rs.getDouble(9), rs.getDouble(10), rs.getTimestamp(11), rs.getTimestamp(12)));
+			}
+		}
+		return productDto_objs;
+	}
+	public ProductDto getProductById(int productId) throws SQLException {
+		String sql="select * from products where p_id=?";
+		try(PreparedStatement stmt=con.prepareStatement(sql)){
+			stmt.setInt(1, productId);
+			ResultSet rs=stmt.executeQuery();
+			while(rs.next()) {
+				return new ProductDto(rs.getInt(1), rs.getInt(2), rs.getString(3),  rs.getString(4),  rs.getString(5),  rs.getString(6),  rs.getInt(7), rs.getInt(8), rs.getDouble(9), rs.getDouble(10), rs.getTimestamp(11), rs.getTimestamp(12));
+			}
+		}
+		return null;
+	}
+	
 }

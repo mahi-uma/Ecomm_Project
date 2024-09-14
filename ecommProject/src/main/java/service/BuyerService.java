@@ -22,5 +22,11 @@ public class BuyerService {
 					buyerEntity_obj.getPhno(),buyerEntity_obj.getAddress());
 		}
 	}
+	public void updateBuyerPwdById(int b_id, BuyerEntity buyerEntity_obj) throws SQLException {
+		buyerdao_obj.updateBuyerPwdById(b_id,buyerEntity_obj);
+	}
+	public void updateBuyerById(BuyerDto bdo) throws SQLException {
+		buyerdao_obj.updateBuyerById(bdo);
+	}
 }
 

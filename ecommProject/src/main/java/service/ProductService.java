@@ -1,5 +1,7 @@
 package service;
 import java.sql.SQLException;
+import java.util.List;
+import dto.ProductDto;
 import dao.ProductDao;
 import entity.ProductEntity;
 import exception.InvalidInputException;
@@ -11,8 +13,10 @@ public class ProductService {
 	public int getProductIdByImage(String name) {
 		return productDao_obj.getProductIdByImage(name);
 	}
-//	public List<ProductDto> displayAllProducts() {
-//		// TODO Auto-generated method stub
-//		return productDao_obj.displayAllProducts();
-//	}
+	public List<ProductDto> displayProducts() throws SQLException {
+		return productDao_obj.displayProducts();
+	}
+	public ProductDto getProductById(int productId) throws SQLException {
+		return productDao_obj.getProductById(productId);
+	}
 }

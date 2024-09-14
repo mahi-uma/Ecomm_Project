@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background: linear-gradient(135deg, #43cea2, #185a9d);
         }
 
         .registration-form {
@@ -69,7 +69,7 @@
 <body>
     <div class="registration-form">
         <h2>Buyer Registration</h2>
-        <form action="/ecommProject/BuyerController" method="post">
+        <form action="/ecommProject/BuyerController" method="post" onsubmit="return fun_valid()">
             <div class="form-group">
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name" required>
@@ -85,10 +85,7 @@
             <div class="form-group">
                 <label for="phno">Phone Number:</label>
                 <input type="text" id="phno" name="phno" required>
-                <span class="error">
-                    <% String error = (String) request.getAttribute("error"); %>
-                    <%= error != null ? error : "" %>
-                </span>
+                <span class="error"></span>
             </div>
             <div class="form-group">
                 <label for="address">Address:</label>
@@ -107,6 +104,18 @@
 	<% 
 	    } 
 	%>
+	<script>
+		function fun_valid(){
+			var pwd=document.getElementById("phno").value;
+			var phoneRegex = /^\d{10}$/;
+			if (!phoneRegex.test(pwd)) {
+				var sp=document.getElementsByClassName("error")[0]
+				sp.textContent="Phone number must be exactly 10 digits."
+				return false;
+            }
+			return true;
+		}
+	</script>
     
 </body>
 </html>
