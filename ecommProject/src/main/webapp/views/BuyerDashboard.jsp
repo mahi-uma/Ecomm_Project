@@ -10,21 +10,10 @@
     List<CategoryDto> categories = (List<CategoryDto>) session.getAttribute("categories");
     List<Boolean> favorites = (List<Boolean>) session.getAttribute("favorites"); // List indicating favorite status
     List<Boolean> cart = (List<Boolean>) session.getAttribute("cart");
-    
+    String errorMessage=request.getParameter("error");
     if (buyer == null) {
         response.sendRedirect("/ecommProject/");
         return;
-    }
-%>
-<% 
- String updateSuccess = (String) session1.getAttribute("updateSuccess");
-    if (updateSuccess != null) {
-%>
-    <script>
-        alert("<%= updateSuccess %>");
-    </script>
-<%
-        session1.removeAttribute("updateSuccess");
     }
 %>
 <!DOCTYPE html>
@@ -40,6 +29,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
+		<% 
+		 String updateSuccess = (String) session1.getAttribute("updateSuccess");
+		    if (updateSuccess != null) {
+		%>
+		    <script>
+		        alert("<%= updateSuccess %>");
+		    </script>
+		<%
+		        session1.removeAttribute("updateSuccess");
+		    }
+		%>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand">EcommRev</a>
@@ -107,15 +107,15 @@
                     String buttonText = isInCart ? "Remove from Cart" : "Add to Cart";
             %>
                 <div class="col-md-4 mb-4 ">
-                    <div class="card d-flex flex-column" style="width: 350px;">
+                    <div class="card d-flex flex-column" style="width: 400px;">
                         <img src="<%= request.getContextPath() %>/images/download.jpg" alt="Login Picture" style="width:340px;height:200px"/>
                         <div class="card-body d-flex flex-column flex-grow-1">
                             <h5 class="card-title"><%= product.getPro_name() %></h5>
                             <p class="card-text"><%= product.getPdesc() %></p>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Price: <%= product.getPpp() %></li>
-                            <li class="list-group-item">Rating: <%= product.getPpp() %></li>
+                            <li class="list-group-item" style="color:green">Price: $<%= product.getPpp() %></li>
+                            <li class="list-group-item">Discount Per Item: <%= product.getDpp() %></li>
                         </ul>
                         <div class="card-body">
                             <div class="row">
@@ -123,7 +123,7 @@
                                     <a href="#" class="btn btn-info btn-block">See Review</a>
                                 </div>
                                 <div class="col-6">
-                                    <a href="#" class="btn btn-success btn-block">Buy Now</a>
+                                   <a href="/ecommProject/views/quantityInput.jsp?productId=<%= product.getP_id()%>" class="btn btn-success btn-block">Buy Now</a>
                                 </div>
                             </div>
                             <div class="row mt-2">
@@ -189,5 +189,12 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    	<% 
+		    if (errorMessage != null) {
+		%>
+		    <script>
+		        alert("<%= updateSuccess %>");
+		    </script>
+		<%}%>
 </body>
 </html>

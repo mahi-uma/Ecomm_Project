@@ -60,7 +60,7 @@
         .submit-btn:hover {
             background-color: #218838;
         }
-        .error {
+        .error,#er {
             color: red;
             font-size: 12px;
         }
@@ -81,6 +81,7 @@
             <div class="form-group">
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
+                <span id="er"></span>
             </div>
             <div class="form-group">
                 <label for="phno">Phone Number:</label>
@@ -107,6 +108,12 @@
 	<script>
 		function fun_valid(){
 			var pwd=document.getElementById("phno").value;
+			var phoneRegex = /^\d{10}$/;
+			if (!phoneRegex.test(pwd)) {
+				var sp=document.getElementsByClassName("error")[0]
+				sp.textContent="Phone number must be exactly 10 digits."
+				return false;
+            }
 			var phoneRegex = /^\d{10}$/;
 			if (!phoneRegex.test(pwd)) {
 				var sp=document.getElementsByClassName("error")[0]

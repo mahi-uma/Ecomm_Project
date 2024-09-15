@@ -67,5 +67,16 @@ public class ProductDao {
 		}
 		return null;
 	}
+	public void updateQuantity(int newQuant, int productId) throws SQLException {
+		String sql="update products set quantity = ? where p_id=?";
+		try(PreparedStatement stmt=con.prepareStatement(sql)){
+			stmt.setInt(1, newQuant);
+			stmt.setInt(2, productId);
+			int res=stmt.executeUpdate();
+			if(res==1) {
+				System.out.println("Quantity Updated....");
+			}
+		}
+	}
 	
 }

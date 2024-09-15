@@ -21,4 +21,7 @@ public class WishListService {
 	public List<Integer> display(int b_id) throws SQLException {
 		return wishlistDao_obj.display(b_id);
 	}
+	public void deleteBybidAndPid(int b_id, int p_id) throws SQLException {
+		wishlistDao_obj.deleteBybidAndPid(b_id,p_id);
+	}
 }

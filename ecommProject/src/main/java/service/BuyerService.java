@@ -28,5 +28,6 @@ public class BuyerService {
 	public void updateBuyerById(BuyerDto bdo) throws SQLException {
 		buyerdao_obj.updateBuyerById(bdo);
 	}
+	
 }
 

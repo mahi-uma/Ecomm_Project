@@ -2,10 +2,11 @@ package controllers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
+import util.PasswordUtils;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -47,7 +48,12 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 		String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        String password="";
+		try {
+			password = PasswordUtils.hashPassword(request.getParameter("password"));
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
         String userType = request.getParameter("userType");
         if ("buyer".equals(userType)) {
         	try {
@@ -83,8 +89,14 @@ public class LoginServlet extends HttpServlet {
 			}
         }
         else if ("seller".equals(userType)) {
+        	String password1="";
+    		try {
+    			password1 = PasswordUtils.hashPassword(request.getParameter("password"));
+    		} catch (NoSuchAlgorithmException e) {
+    			e.printStackTrace();
+    		}
             try {
-				SellerDto sellerDto_obj=sellerService_obj.login(username,password);
+				SellerDto sellerDto_obj=sellerService_obj.login(username,password1);
 				HttpSession session = request.getSession();
 				session.setAttribute(userType,sellerDto_obj);
 				response.sendRedirect("/ecommProject/ServerController?userType=seller");

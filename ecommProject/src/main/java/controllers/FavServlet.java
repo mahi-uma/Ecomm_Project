@@ -77,5 +77,22 @@ public class FavServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
 	}
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session=request.getSession();
+		BuyerDto buyer=(BuyerDto) session.getAttribute("buyer");
+		if(buyer==null) {
+			response.sendRedirect("/ecommProject/");
+			return;
+		}
+		System.out.println(request.getParameter("id"));
+		int p_id=Integer.parseInt(request.getParameter("id"));
+		try {
+			wishListService_obj.deleteBybidAndPid(buyer.getB_id(),p_id);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+	}
 
 }

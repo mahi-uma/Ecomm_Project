@@ -42,6 +42,10 @@
             width: 150px;
             margin: 0 10px;
         }
+        .error-message,.er{
+        	color: red;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>

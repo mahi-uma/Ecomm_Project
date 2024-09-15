@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 import javax.servlet.ServletConfig;
@@ -14,6 +15,7 @@ import dto.BuyerDto;
 import entity.BuyerEntity;
 import service.BuyerService;
 import service.ProductService;
+import util.PasswordUtils;
 
 @WebServlet("/BuyerController")
 public class BuyerController extends HttpServlet {
@@ -31,9 +33,14 @@ public class BuyerController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String name = request.getParameter("name");
         String email = request.getParameter("email");
-        String password = request.getParameter("password");
         String phno = request.getParameter("phno");
         String address = request.getParameter("address");
+        String password="";
+		try {
+			password = PasswordUtils.hashPassword(request.getParameter("password"));
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
         BuyerEntity buyerEntity_obj=new BuyerEntity(name, email, password, phno, address);
         try {
 			buyerService_obj.register(buyerEntity_obj);

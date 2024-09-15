@@ -19,4 +19,7 @@ public class ProductService {
 	public ProductDto getProductById(int productId) throws SQLException {
 		return productDao_obj.getProductById(productId);
 	}
+	public void updateQuantity(int newQuant, int productId) throws SQLException {
+		productDao_obj.updateQuantity(newQuant,productId);
+	}
 }

@@ -46,6 +46,12 @@ public class ServerController extends HttpServlet {
 		else if(s.equals("/ecommProject") && t.equals("displayWish")) {
 			final_page="/views/WishList.jsp";
 		}
+		else if(s.equals("/ecommProject") && t.equals("success")) {
+			final_page="/views/PaySuccess.jsp";
+		}
+		else if(s.equals("/ecommProject") && t.equals("fail")) {
+			final_page="/views/PayFail.jsp";
+		}
 		RequestDispatcher dispatcher = request.getRequestDispatcher(final_page);
         dispatcher.forward(request, response);
 	}

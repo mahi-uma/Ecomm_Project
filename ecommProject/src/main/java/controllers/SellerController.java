@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import entity.SellerEntity;
 import service.SellerService;
+import util.PasswordUtils;
 
 @WebServlet("/SellerController")
 public class SellerController extends HttpServlet {
@@ -28,11 +30,16 @@ public class SellerController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String name = request.getParameter("name");
         String email = request.getParameter("email");
-        String password = request.getParameter("password");
         String phno = request.getParameter("phno");
         String bus_name=request.getParameter("bus_name");
         String bus_type=request.getParameter("bus_type");
         String bus_address=request.getParameter("bus_address");
+        String password="";
+		try {
+			password = PasswordUtils.hashPassword(request.getParameter("password"));
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
         SellerEntity sellerEntity_obj=new SellerEntity(name,email,password,phno,bus_name,bus_type,bus_address);
         try {
 			sellerService_obj.register(sellerEntity_obj);

@@ -55,4 +55,15 @@ public class WishListDao {
 		}
 		return p_id;
 	}
+	public void deleteBybidAndPid(int b_id, int p_id) throws SQLException {
+		String sql="delete from wishlist where b_id =? and p_id=?";
+		try(PreparedStatement stmt=con.prepareStatement(sql)){
+			stmt.setInt(1, b_id);
+			stmt.setInt(2, p_id);
+			int res=stmt.executeUpdate();
+			if(res==1) {
+				System.out.println("Yeah Deleted...");
+			}
+		}
+	}
 }

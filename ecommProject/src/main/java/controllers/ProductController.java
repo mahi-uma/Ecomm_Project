@@ -49,6 +49,9 @@ public class ProductController extends HttpServlet {
 		if(sdpp.equals(null)) {
 			dpp=0.0;
 		}
+		else {
+			dpp=Double.parseDouble(sdpp);
+		}
 		ProductEntity productEntity_obj=new ProductEntity(seller.getS_id(), pro_name, pdesc, image, seller.getBus_type(), quant, th, ppp, dpp);
 		try {
 			productService_obj.add_product(productEntity_obj);

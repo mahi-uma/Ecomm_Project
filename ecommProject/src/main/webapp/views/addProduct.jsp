@@ -9,7 +9,7 @@
     <style>
     	body {
 		    background-color: #E7E8D1;
-		    font-family: Arial, sans-serif;
+		    background: linear-gradient(135deg, #43cea2, #185a9d);
 		}
 
 		.container {
